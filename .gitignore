@@ -1,0 +1,5 @@
+venv
+.ipynb_checkpoints
+__pycache__
+static/*.h5ad
+static/*.feather
