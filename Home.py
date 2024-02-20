@@ -11,9 +11,9 @@ st.markdown(
     [Nazmus Salehin](https://orcid.org/0000-0002-8155-4296)\*, 
     [Joshua M. Brickman](https://orcid.org/0000-0003-1580-7491)**_
     
-    _\* There authors contributed equaly to the work_
+    _\* There authors contributed equally to the work_
     
-    _** Coresponding author [joshua.brickman@sund.ku.dk](mailto:joshua.brickman@sund.ku.dk)_
+    _** Corresponding author [joshua.brickman@sund.ku.dk](mailto:joshua.brickman@sund.ku.dk)_
 
     Abstract goes here!
     """
