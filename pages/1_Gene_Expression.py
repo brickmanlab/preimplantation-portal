@@ -1,23 +1,12 @@
 #!/usr/bin/env python
 import urllib.request
 from pathlib import Path
+
 import anndata
 import pandas as pd
-
 import streamlit as st
 
-from utils import plot_sc_embedding
-
-DATA = {
-    "human": {
-        "filename": "/tmp/human.h5ad",
-        "url": "https://zenodo.org/records/10669600/files/portal_human_v1.h5ad",
-    },
-    "mouse": {
-        "filename": "/tmp/mouse.h5ad",
-        "url": "https://zenodo.org/records/10669600/files/portal_mouse_v1.h5ad",
-    },
-}
+from utils import DATA, plot_sc_embedding
 
 st.set_page_config(layout="wide")
 DEFAULT_DR = "X_draw_graph_fa"
@@ -26,11 +15,12 @@ DEFAULT_META = "stage"
 
 @st.cache_resource
 def load_dataset(ds: str) -> anndata.AnnData:
-    if not Path(DATA[ds]["filename"]).exists():    
+    default_path: str = f"/tmp/{ds}.h5ad"
+    if not Path(default_path).exists():
         with st.spinner("Please wait we are downloading the SDH Model."):
-            urllib.request.urlretrieve(DATA[ds]["url"], DATA[ds]["filename"])
+            urllib.request.urlretrieve(DATA[ds]["ds"], default_path)
 
-    return anndata.read_h5ad(DATA[ds]["filename"])
+    return anndata.read_h5ad(default_path)
 
 
 def plot_embedding(

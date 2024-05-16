@@ -3,6 +3,23 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
+VERSION = 1.1
+ZENODO_URL = "https://zenodo.org/records/11204495/files"
+DATA = {
+    "human": {
+        "ds": f"{ZENODO_URL}/portal_human_v1.1.h5ad",
+        "degs_ct": f"{ZENODO_URL}/human_degs_ct.feather",
+        "degs_stage": f"{ZENODO_URL}/human_degs_stage.feather",
+        "shap": f"{ZENODO_URL}/human_SHAP.feather",
+    },
+    "mouse": {
+        "ds": f"{ZENODO_URL}/portal_mouse_v1.1.h5ad",
+        "degs_ct": f"{ZENODO_URL}/mouse_degs_ct.feather",
+        "degs_stage": f"{ZENODO_URL}/mouse_degs_stage.feather",
+        "shap": f"{ZENODO_URL}/mouse_SHAP.feather",
+    },
+}
+
 
 def get_embedding(adata: anndata.AnnData, key: str) -> pd.DataFrame:
     """
@@ -61,13 +78,14 @@ def plot_sc_embedding(
     if group_by:
         embeddings[group_by] = adata.obs[group_by].values
         embeddings = embeddings.sort_values(by=group_by)
-        kwargs = {
-            "color": embeddings[group_by],
-            # "title": group_by,
-            "color_discrete_map": dict(
-                zip(adata.obs[group_by].cat.categories, adata.uns[f"{group_by}_colors"])
-            ),
-        }
+
+        # color_uns_key = f"{group_by}_colors"
+
+        kwargs = {"color": embeddings[group_by].values.tolist()}
+        if adata.obs[group_by].dtype == "category":
+            ...
+        else:
+            kwargs["color_continuous_scale"] = px.colors.sequential.Viridis
 
     if feature:
         X = (
@@ -77,7 +95,7 @@ def plot_sc_embedding(
         )
         embeddings[feature] = X.ravel()
         kwargs = {
-            "color": embeddings[feature],
+            "color": embeddings[feature].values.tolist(),
             # "title": feature,
             "color_continuous_scale": px.colors.sequential.Viridis,
         }

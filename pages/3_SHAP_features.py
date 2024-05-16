@@ -2,10 +2,7 @@
 import pandas as pd
 import streamlit as st
 
-DATA = {
-    "human": "https://zenodo.org/records/10638944/files/human_SHAP.feather",
-    "mouse": "https://zenodo.org/records/10638944/files/mouse_SHAP.feather",
-}
+from utils import DATA
 
 st.set_page_config(layout="wide")
 
@@ -19,7 +16,7 @@ ds = st.sidebar.selectbox(
 )
 
 if ds:
-    data = pd.read_feather(DATA[ds])
+    data = pd.read_feather(DATA[ds]["shap"])
     subset = data.copy()
 
     query = st.sidebar.selectbox(

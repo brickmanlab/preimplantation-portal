@@ -2,12 +2,7 @@
 import pandas as pd
 import streamlit as st
 
-DATA = {
-    "human (ct) ": "https://zenodo.org/records/10638944/files/human_degs_ct.feather",
-    "human (stage)": "https://zenodo.org/records/10638944/files/human_degs_stage.feather",
-    "mouse (ct)": "https://zenodo.org/records/10638944/files/mouse_degs_ct.feather",
-    "mouse (stage)": "https://zenodo.org/records/10638944/files/mouse_degs_stage.feather",
-}
+from utils import DATA
 
 st.set_page_config(layout="wide")
 
@@ -22,7 +17,15 @@ ds = st.sidebar.selectbox(
 )
 
 if ds:
-    markers = pd.read_feather(DATA[ds])
+    filter_by = st.sidebar.selectbox(
+        "**Select by**",
+        [x for x in DATA[ds].keys() if "degs" in x],
+        index=None,
+        placeholder="Select by",
+    )
+
+if ds and filter_by:
+    markers = pd.read_feather(DATA[ds][filter_by])
 
     group = st.sidebar.multiselect(
         "**Cell type**", markers.group.unique(), placeholder="Select group ..."
