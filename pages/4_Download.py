@@ -7,35 +7,33 @@ st.markdown(
     """
     # Download
 
-    ## Pipelines
+    ## 1. Pipelines
 
-    - https://github.com/nf-core/fetchngs/ (revision 1.10.0)
-    - https://github.com/brickmanlab/scrnaseq (revision: feature/smartseq)
+    - Downloading datasets: [nf-core/fetchngs (revision 1.10.0)](https://github.com/nf-core/fetchngs)
+    - Aligning datasets: [brickmanlab/scrnaseq (revision: feature/smartseq)](https://github.com/brickmanlab/scrnaseq)
+    - **Ensembl Genomes**
+        - Mouse: GRCm38 v102
+        - Human: GRCh38 v110
+
+    ## 2. Codebase
     
-
-    ## Data analysis
+    - GitHub: [brickmanlab/preimplantation-models](https://github.com/brickmanlab/preimplantation-models)
+    - Portal codebase: [brickmanlab/preimplantation-portal](https://github.com/brickmanlab/preimplantation-portal)
     
-    - https://github.com/brickmanlab/preimplantation-models
-
-    Raw pre-processed files
-
-    - Zenodo Link #1
-    - Zenodo Link #2
-
-    ## AI models
-
-    Trained models with parameters were uploaded to Hugging Face
+    ## 3. Raw data
     
-    - https://huggingface.co/brickmanlab/preimplantation-models
+    - [Mouse](https://zenodo.org/records/11204495/files/01_mouse_reprocessed.h5ad?download=1)
+    - [Human](https://zenodo.org/records/11204495/files/32_human_adata.h5ad?download=1)
 
-    ### Models
 
-    - scANVI
-    - scANVI [ns=15]
-    - XGBoost
-        - scVI
-        - scANVI
-        - scGEN
+    ## 4. AI models
+
+    Trained models with parameters were uploaded to [Hugging Face](https://huggingface.co/brickmanlab/preimplantation-models).
+
+    ### 4.1 Models
+
+    - [scANVI mouse](https://huggingface.co/brickmanlab/mouse-scanvi)
+    - [scANVI human](https://huggingface.co/brickmanlab/human-scanvi)
 
     """
 )
