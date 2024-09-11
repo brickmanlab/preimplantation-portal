@@ -155,11 +155,10 @@ def plot_feature(
     df = df.sort_values(by=group_by)
 
     g = None
-    match(kind):
-        case "box":
-            g = px.box(df, x=group_by, y=feature, color=group_by)
-        case _:
-            raise ValueError(f"Provided kind: {kind} not supported")
+    if kind == "box":
+        g = px.box(df, x=group_by, y=feature, color=group_by)
+    else:
+        raise ValueError(f"Provided kind: {kind} not supported")
 
     ax_ = ax if ax else st
     ax_.plotly_chart(g, use_container_width=True)
