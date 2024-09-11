@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 import streamlit as st
 
+from constants import DATA
+
 st.set_page_config(layout="wide")
 
 st.markdown(
-    """
+    f"""
     # Download
 
     ## 1. Pipelines
@@ -22,9 +24,8 @@ st.markdown(
     
     ## 3. Raw data
     
-    - [Mouse](https://zenodo.org/records/11204495/files/01_mouse_reprocessed.h5ad?download=1)
-    - [Human](https://zenodo.org/records/11204495/files/32_human_adata.h5ad?download=1)
-
+    - [Mouse]({DATA['MOUSE']['RAW_DATASET']})
+    - [Human]({DATA['HUMAN']['RAW_DATASET']})
 
     ## 4. AI models
 
