@@ -1,24 +1,37 @@
+import socket
+import urllib.request
+from pathlib import Path
+from typing import Literal
+
 import anndata
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-VERSION = 1.1
-ZENODO_URL = "https://zenodo.org/records/11204495/files"
-DATA = {
-    "human": {
-        "ds": f"{ZENODO_URL}/portal_human_v1.1.h5ad",
-        "degs_ct": f"{ZENODO_URL}/human_degs_ct.feather",
-        "degs_stage": f"{ZENODO_URL}/human_degs_stage.feather",
-        "shap": f"{ZENODO_URL}/human_SHAP.feather",
-    },
-    "mouse": {
-        "ds": f"{ZENODO_URL}/portal_mouse_v1.1.h5ad",
-        "degs_ct": f"{ZENODO_URL}/mouse_degs_ct.feather",
-        "degs_stage": f"{ZENODO_URL}/mouse_degs_stage.feather",
-        "shap": f"{ZENODO_URL}/mouse_SHAP.feather",
-    },
-}
+
+@st.cache_data
+def fetch_resource(url: str) -> str:
+    """Helper function for downloading datasets
+
+    Parameters
+    ----------
+    url : str
+        Zenodo url link
+
+    Returns
+    -------
+    str
+        Path where the file was downloaded to, default /tmp
+    """
+    
+    filename = f"/tmp/{url.split('/')[-1]}"
+    if not Path(filename).exists():
+        try:
+            urllib.request.urlretrieve(url, filename)
+        except (socket.gaierror, urllib.error.URLError) as err:
+            raise ConnectionError(f"could not download {url} due to {err}")
+
+    return filename
 
 
 def get_embedding(adata: anndata.AnnData, key: str) -> pd.DataFrame:
@@ -55,7 +68,7 @@ def plot_sc_embedding(
     group_by: str = None,
     feature: str = None,
     layer: str = None,
-    ax=None,
+    ax = None,
 ):
     """
     Plot single-cell dataset
@@ -89,9 +102,9 @@ def plot_sc_embedding(
 
     if feature:
         X = (
-            adata[:, feature].layers["scVI_normalized"].A
+            adata[:, feature].layers["scVI_normalized"].toarray()
             if layer
-            else adata.raw[:, feature].X.A
+            else adata.raw[:, feature].X.toarray()
         )
         embeddings[feature] = X.ravel()
         kwargs = {
@@ -112,3 +125,41 @@ def plot_sc_embedding(
         # .update_xaxes(showgrid=False)
         # .update_yaxes(showgrid=False, zeroline=False)
     )
+
+
+def plot_feature(
+    adata: anndata.AnnData, 
+    feature: str, 
+    group_by: str, 
+    kind: Literal["box"] = "box", 
+    ax = None
+):
+    """Plot feature expression
+
+    Parameters
+    ----------
+    adata : anndata.AnnData
+        Dataset
+    feature : str
+        Gene name
+    group_by : str
+        Metadata column
+    kind : str
+        Type of plot
+    ax : _type_, optional
+        Axis, by default None
+    """
+
+    df = pd.DataFrame(adata.raw[:, feature].X.toarray(), columns=[feature])
+    df[group_by] = adata.obs[group_by].values
+    df = df.sort_values(by=group_by)
+
+    g = None
+    match(kind):
+        case "box":
+            g = px.box(df, x=group_by, y=feature, color=group_by)
+        case _:
+            raise ValueError(f"Provided kind: {kind} not supported")
+
+    ax_ = ax if ax else st
+    ax_.plotly_chart(g, use_container_width=True)

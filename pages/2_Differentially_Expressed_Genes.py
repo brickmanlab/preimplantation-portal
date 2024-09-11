@@ -2,11 +2,18 @@
 import pandas as pd
 import streamlit as st
 
-from utils import DATA
+from constants import DATA
+from utils import fetch_resource
 
 st.set_page_config(layout="wide")
 
-st.markdown("# Differentially expressed genes")
+st.markdown("""
+    # Differentially expressed genes
+    
+    Genes below have been determined using `sc.tl.rank_genes_groups` where `t-test_overestim_var`
+    is the default method.
+    """
+)
 
 filter_flag = []
 ds = st.sidebar.selectbox(
@@ -19,13 +26,13 @@ ds = st.sidebar.selectbox(
 if ds:
     filter_by = st.sidebar.selectbox(
         "**Select by**",
-        [x for x in DATA[ds].keys() if "degs" in x],
+        DATA[ds]["DEGS"].keys(),
         index=None,
         placeholder="Select by",
     )
 
 if ds and filter_by:
-    markers = pd.read_feather(DATA[ds][filter_by])
+    markers = pd.read_feather(fetch_resource(DATA[ds]['DEGS'][filter_by]))
 
     group = st.sidebar.multiselect(
         "**Cell type**", markers.group.unique(), placeholder="Select group ..."
