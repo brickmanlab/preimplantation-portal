@@ -19,8 +19,8 @@ st.markdown(
 
     ## 2. Codebase
     
-    - GitHub: [brickmanlab/preimplantation-models](https://github.com/brickmanlab/preimplantation-models)
-    - Portal codebase: [brickmanlab/preimplantation-portal](https://github.com/brickmanlab/preimplantation-portal)
+    - Data analysis: [brickmanlab/proks-salehin-et-al](https://github.com/brickmanlab/proks-salehin-et-al)
+    - Web portal: [brickmanlab/preimplantation-portal](https://github.com/brickmanlab/preimplantation-portal)
     
     ## 3. Raw data
     
